@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Northern Wildfires Story</title>
+<meta name="description" content="Two decades of satellite data show tree cover loss from wildfires surging in Canada and Russia. An interactive map and data story by Noah Ott.">
+<style>
+:root{--ink:#121212;--body:#2b2b2b;--muted:#666;--rule:#dfdfdf;--accent:#8c1c13;--serif:Georgia,'Times New Roman',Times,serif;--sans:'Helvetica Neue',Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--body);font:20px/1.65 var(--serif);-webkit-font-smoothing:antialiased}
+.col{max-width:600px;margin:0 auto;padding:0 20px}
+.wide{max-width:1000px;margin:0 auto;padding:0 20px}
+.masthead{border-bottom:1px solid var(--ink);text-align:center;padding:14px 0 12px;font:700 13px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+header{text-align:center;padding:48px 0 30px}
+.kicker{font:700 12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+h1{font:700 clamp(2.2rem,6.5vw,3.5rem)/1.1 var(--serif);color:var(--ink);margin:0 auto .45em;max-width:820px;letter-spacing:-.015em}
+.deck{font:400 1.3rem/1.45 var(--serif);color:var(--muted);max-width:640px;margin:0 auto 1.4em}
+.byline{font:13px/1.5 var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.byline b{color:var(--ink)}
+.rule{border:0;border-top:1px solid var(--rule);margin:0 auto;max-width:600px}
+h2{font:700 1.55rem/1.25 var(--serif);color:var(--ink);margin:2.1em 0 .55em}
+p{margin:0 0 1.15em}
+.lede::first-line{font-variant:small-caps;letter-spacing:.04em;color:var(--ink)}
+em{font-style:italic}
+figure{margin:2.4em 0}
+figcaption{font:13px/1.5 var(--sans);color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--rule)}
+figcaption b{color:var(--ink)}
+.figtitle{font:700 15px/1.3 var(--sans);color:var(--ink);margin:0 0 4px}
+.figsub{font:14px/1.4 var(--sans);color:var(--muted);margin:0 0 12px}
+.vizbox{overflow-x:auto;display:flex;justify-content:center;border-top:2px solid var(--ink);padding-top:14px}
+.guide{font:14px/1.55 var(--sans);color:var(--body);background:#f6f6f4;padding:12px 16px;margin-bottom:14px}
+.guide summary{cursor:pointer;font-weight:700;color:var(--ink)}
+.guide ul{margin:.6em 0 0;padding-left:1.1em}
+.guide li{margin:.2em 0}
+.legend{display:flex;align-items:center;gap:10px;font:12px var(--sans);color:var(--muted);margin-top:10px}
+.bar{flex:0 0 160px;height:9px;background:linear-gradient(90deg,#fde8c8,#f4a259,#d6411f,#8b0f0f)}
+.pull{font:italic 400 1.9rem/1.3 var(--serif);color:var(--ink);text-align:center;margin:2em -10px;padding:1.1em 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.pull small{display:block;font:12px var(--sans);font-style:normal;color:var(--muted);margin-top:10px;letter-spacing:.06em;text-transform:uppercase}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin:2.2em 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.stat{padding:14px 14px 14px 0}
+.stat+.stat{padding-left:14px;border-left:1px solid var(--rule)}
+.stat b{display:block;font:700 2rem/1.1 var(--serif);color:var(--ink)}
+.stat span{display:block;font:13px/1.4 var(--sans);color:var(--muted);margin-top:4px}
+@media(max-width:560px){.stats{grid-template-columns:1fr}.stat+.stat{padding-left:0;border-left:0;border-top:1px solid var(--rule)}}
+.chartpanel{background:#16181d;padding:22px 22px 16px}
+.chartpanel .figtitle{color:#fff}
+.chartpanel .figsub{color:#a9afbb}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.tabs button{font:600 13px var(--sans);padding:7px 13px;border:1px solid #4a5163;background:transparent;color:#d7dbe3;cursor:pointer}
+.tabs button[aria-pressed=true]{background:#fff;color:#16181d;border-color:#fff}
+.chartbox{position:relative;height:400px}
+details.tbl{font:14px var(--sans);margin-top:14px}
+details.tbl summary{cursor:pointer;font-weight:700;color:var(--ink)}
+.tablewrap{max-height:380px;overflow:auto;margin-top:10px;border-top:1px solid var(--ink)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:6px 10px;text-align:right;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+th{position:sticky;top:0;background:#fff;font-weight:700;color:var(--ink)}
+.pos{color:#a3261b}.neg{color:#2b6a46}
+.sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;border:1px solid #777}
+.note{font:15px/1.6 var(--sans);background:#f6f6f4;padding:18px 22px;margin:2.4em 0;border-left:3px solid var(--ink)}
+.note h3{margin:0 0 .4em;font:700 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+footer{margin-top:56px;padding:26px 0 56px;border-top:1px solid var(--ink);font:14px/1.65 var(--sans);color:var(--muted)}
+footer b{color:var(--ink)}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="masthead">Data Story</div>
+<header><div class="col" style="max-width:860px">
+  <div class="kicker">Climate &amp; Forests</div>
+  <h1>Northern Forests Are Burning Faster, and the Numbers Show It</h1>
+  <p class="deck">Two decades of tree cover loss data reveal a sharp recent surge in wildfire damage in Canada and Russia, the two countries hit hardest.</p>
+  <div class="byline">By <b>Noah Ott</b> &nbsp;·&nbsp; Data: Our World in Data, 2001–2024</div>
+</div></header>
+<hr class="rule">
+
+<main>
+<div class="col" style="margin-top:36px">
+  <p class="lede">As the global climate warms, wildfires across Canada and the Pacific coast of the United States seem to be getting worse. Is that impression backed by the numbers, or is it the product of heavier media attention to climate change? A look at global tree cover loss data suggests the trend is real, and that it has accelerated in the most recent years on record.</p>
+
+  <p>The analysis draws on Our World in Data's figures for tree cover loss by dominant driver, covering 2001 through 2024. Tracking only the hectares of forest lost to wildfire, the picture is clear: the burden falls on the world's northern forests, and the latest years stand apart from the rest.</p>
+
+  <div class="stats">
+    <div class="stat"><b>7.8M ha</b><span>Canada's wildfire tree cover loss in 2023, up from about 0.56M in 2001</span></div>
+    <div class="stat"><b>4.2M ha</b><span>Russia's loss in 2024, up from about 1.3M in 2001</span></div>
+    <div class="stat"><b>&lt;2M ha</b><span>Combined loss for both countries in 2001</span></div>
+  </div>
+
+  <h2>Where the fires hit hardest</h2>
+  <p>The interactive map below shows hectares of tree cover lost to wildfire in every country, year by year. Press play and the colors shift from pale to deep red as losses mount.</p>
+</div>
+
+<figure class="wide" id="map">
+  <p class="figtitle">Tree cover lost to wildfires, by country, 2001–2024</p>
+  <p class="figsub">Hectares per year. Deeper red means more loss.</p>
+  <details class="guide">
+    <summary>How to use the map and animation</summary>
+    <ul>
+      <li><b>Animate it:</b> press the play button or drag the year slider to move through 2001–2024.</li>
+      <li><b>Read the colors:</b> the deeper the red, the more tree cover a country lost to wildfire that year.</li>
+      <li><b>Hover</b> over a country for its exact figure.</li>
+      <li><b>Zoom and pan</b> with scroll or drag; the home icon resets the view.</li>
+    </ul>
+    <div class="legend"><span>Less loss</span><div class="bar"></div><span>More loss</span></div>
+  </details>
+  <div class="vizbox">
+<div class='tableauPlaceholder' id='viz1794779250989' style='position: relative'><noscript><a href='#'><img alt='Tree Cover Loss Due to Wildfires ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;4G&#47;4GPJWN76M&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;4GPJWN76M' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;4G&#47;4GPJWN76M&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1794779250989');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+  </div>
+  <figcaption><b>Source:</b> Our World in Data. Map built in Tableau by Noah Ott.</figcaption>
+</figure>
+
+<div class="col">
+  <p>The map confirms what media coverage suggests: wildfire losses concentrate in cold, dry, heavily forested northern countries, chiefly Canada and Russia. Brazil is a southern outlier, most likely because of its vast area and expanse of forest. For residents of the colder, drier regions most at risk, the data underscores the importance of being prepared for fire.</p>
+
+  <p>The most striking pattern is in time. Losses in the last five years of data run well above those of the first five. Canada lost almost 8 million hectares of tree cover in 2023, and Russia lost about 4 million in 2024. In 2001, the two countries together lost less than 2 million. Against that starting point, the 2023 and 2024 figures amount to roughly a doubling to a quadrupling of losses.</p>
+
+  <div class="pull">Canada's wildfire losses jumped by more than 6 million hectares in a single year, while the U.S. never moved by even a million.<small>From the year-over-year pivot table below</small></div>
+
+  <h2>A steadier baseline: the United States</h2>
+  <p>Totals alone can overstate or understate a trend, so the next view uses a common yardstick. It tracks the <em>year-over-year change</em> in hectares lost to wildfire, comparing Canada and Russia with the United States as a baseline. Positive values mean a country lost more forest than the year before; negative values mean less.</p>
+</div>
+
+<figure class="wide">
+  <div class="chartpanel">
+    <p class="figtitle">Wildfire tree cover loss: United States, Canada and Russia</p>
+    <p class="figsub">Lines use each country's flag colors. Click a name in the legend to hide or show it; hover for exact values.</p>
+    <div class="tabs" role="group" aria-label="Chart view">
+      <button id="b1" aria-pressed="true">Change vs. prior year</button>
+      <button id="b2" aria-pressed="false">Total loss per year</button>
+    </div>
+    <div class="chartbox"><canvas id="chart" role="img" aria-label="Line chart of wildfire tree cover loss for the United States, Canada and Russia, 2002 to 2024"></canvas></div>
+  </div>
+  <figcaption><b>Source:</b> Our World in Data; pivot table by Noah Ott.</figcaption>
+  <details class="tbl">
+    <summary>See the full pivot table</summary>
+    <div class="tablewrap"><table id="pivot"></table></div>
+  </details>
+</figure>
+
+<div class="col">
+  <p>The U.S. line barely leaves the center of the chart. Its largest annual swing in either direction is under 700,000 hectares, and its total loss in any single year stays below about one million. That makes it a useful control: a large country with substantial forests and well-publicized fire seasons, yet a relatively stable record.</p>
+
+  <p>Canada and Russia break from that pattern in different ways. Russia's story is one of volatility at a high level. Since 2012, its yearly swings regularly top 1 million hectares, including a rise of roughly 2.1 million that year and a drop of roughly 2.2 million in 2022, as it settled into a range that has mostly run between 2 and 5 million hectares lost annually. Canada's record, in contrast, was relatively flat for two decades, with annual losses mostly between 1 and 2 million hectares, until 2023, when its total jumped by about 6.3 million hectares in one year. Its loss fell by about 3.3 million the following year, yet 2024's 4.4 million hectares was still more than double the typical Canadian year before 2023.</p>
+
+  <h2>What this suggests about a warming climate</h2>
+  <p>Scientists widely link a warming climate to longer, hotter and drier fire seasons, conditions that leave northern forests primed to burn. The pivot table fits that expectation in an important way: the change is not a gradual drift but a pattern of larger and more extreme swings, which is how a system under growing stress would be expected to behave. The largest single-year jumps in the record, Canada's in 2023 and Russia's in 2016 and 2012, sit in a period of rising global temperatures, while the comparison country shows no comparable surge.</p>
+
+  <p>The data alone cannot prove cause. Tree cover loss reflects weather in a given year, how much fuel a forest holds, and how fires are managed, as well as climate. But taken together, the record of the past two decades gives the heavy media attention a firm footing: the largest wildfire losses on record are recent, and they are concentrated where the climate is changing fastest.</p>
+
+  <div class="note">
+    <h3>About the data</h3>
+    The map and pivot table measure tree cover loss as a raw total in hectares, not as a share of each country's land. Larger countries naturally lose more, so Canada and Russia may look worse partly because of their size. Measuring loss as a percentage of land area could reveal smaller countries that are disproportionately affected by wildfire even when their totals are small. That is a natural next step for this research.
+  </div>
+</div>
+</main>
+
+<footer><div class="col">
+  <p><b>Story and visualizations:</b> Noah Ott</p>
+  <p><b>Data source:</b> <a href="https://ourworldindata.org/grapher/tree-cover-loss-by-dominant-driver?tab=table&overlay=download-data" target="_blank" rel="noopener">Our World in Data: Tree cover loss by dominant driver</a></p>
+  <p><b>Methods:</b> Annual tree cover loss (hectares) attributed to wildfires was downloaded from Our World in Data for 2001–2024. The interactive map was built in Tableau and animates across years, with color intensity showing loss and red marking the most. The pivot table was built in Excel from the same data for the USA, Russia and Canada, subtracting each year's wildfire loss from the next to show the year-over-year change. Values are totals in hectares, not percentages of land area.</p>
+  <p><b>AI disclosure:</b> Claude, an AI assistant from Anthropic, helped build this website's layout and code and helped edit the story's text for a journalistic style. The research question, data, Tableau map and pivot table are Noah Ott's work.</p>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const years=[2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024];
+const diff={
+USA:[242993.22,-171794.97,507830.23,-20682.4,-45038.9,-230779.5,-141861.02,-195237.63,324216.65,-344254.7,98419.08,37298.44,-134130.38,674035.36,-304545.9,-63837.05,-5378.25,97369.2,24855.24,174604.76,115748.36,-676166.76,229123.3],
+Canada:[849969.5,-452605.8,611262,230976.9,-456164.6,-241875.5,6606.6,-300184.7,535928.5,55720.2,187567.5,424527.9,-221440.6,116682.5,-806706.9,398220.1,-309029.5,66266.5,-907107.2,1267153.5,-167587.8,6338748.4,-3349104],
+Russia:[843933.2,445370.6,145393.2,-1891150.75,668422.25,-1189.9,739733.2,-980345,-313704.6,1229331,2147907.8,-171490.5,-509879,-2131750.4,2374456.7,-316823.8,147679.8,-1114645,1681413.7,1140555,-2234124.7,-810825.6,1837995.8]};
+const total={
+USA:[581185,409390,917220,896538,851499,620719,478858,283621,607837,263583,362002,399300,265170,939205,634659,570822,565444,662813,687668,862273,978022,301855,530978],
+Canada:[1412631,960025,1571287,1802264,1346100,1104224,1110831,810646,1346574,1402295,1589862,2014390,1792949,1909632,1102925,1501145,1192116,1258382,351275,1618428,1450841,7789589,4440485],
+Russia:[2118938,2564309,2709702,818551,1486974,1485784,2225517,1245172,931467,2160798,4308706,4137216,3627336,1495586,3870043,3553219,3700899,2586254,4267668,5408222,3174098,2363272,4201268]};
+const COL={USA:'#4a90e2',Canada:'#e8343a',Russia:'#ffffff'};
+const fmt=v=>Math.round(v).toLocaleString();
+document.getElementById('pivot').innerHTML='<thead><tr><th>Year</th>'+['USA','Russia','Canada'].map(k=>'<th><span class="sw" style="background:'+COL[k]+'"></span>'+k+'</th>').join('')+'</tr></thead><tbody>'+
+years.map((y,i)=>'<tr><td>'+y+'</td>'+['USA','Russia','Canada'].map(k=>{const v=diff[k][i];return '<td class="'+(v>=0?'pos':'neg')+'">'+(v>0?'+':'')+fmt(v)+'</td>'}).join('')+'</tr>').join('')+'</tbody>';
+let chart,mode='diff';
+function build(){
+  const data=mode==='diff'?diff:total,ink='#a9afbb',grid='#2b3039';
+  if(chart)chart.destroy();
+  chart=new Chart(document.getElementById('chart'),{type:'line',
+    data:{labels:years,datasets:['USA','Canada','Russia'].map(k=>({label:k==='USA'?'United States (baseline)':k,data:data[k],borderColor:COL[k],backgroundColor:COL[k],borderWidth:k==='USA'?3:2.5,tension:.25,pointRadius:2,pointHoverRadius:5}))},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#e6e9ef',usePointStyle:true,font:{family:'Helvetica Neue, Arial, sans-serif'}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+(mode==='diff'&&c.parsed.y>0?'+':'')+fmt(c.parsed.y)+' ha'}}},
+      scales:{x:{ticks:{color:ink},grid:{color:grid}},y:{ticks:{color:ink,callback:v=>(v/1e6).toFixed(1)+'M'},grid:{color:grid},title:{display:true,color:ink,text:mode==='diff'?'Change in hectares vs. prior year':'Hectares lost to wildfire'}}}}});
+}
+function set(m){mode=m;b1.setAttribute('aria-pressed',m==='diff');b2.setAttribute('aria-pressed',m!=='diff');build();}
+b1.onclick=()=>set('diff');b2.onclick=()=>set('total');
+build();
+</script>
+</body>
+</html>
